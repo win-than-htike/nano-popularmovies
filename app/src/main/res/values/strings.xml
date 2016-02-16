@@ -1,0 +1,16 @@
+<resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
+	<string name="app_name">PopularMovies</string>
+	<string name="sort_order_title">Sort Order</string>
+	<string name="sort_popularity">By popularity</string>
+	<string name="pref_dialog_title">Popularity</string>
+	<string name="key_sort_pref">sort</string>
+	<string name="list_pref_vote_desc">vote_count.desc</string>
+	<string name="list_pref_popular_desc">popularity.desc</string>
+	<string name="popularity_popular_desc">Most Popular</string>
+	<string name="popularity_vote_desc">Most Voted</string>
+	<string name="list_pref_title">Change the Sort Order</string>
+	<string name="title_synopsis">Plot Synopsis</string>
+	<string name="title_rating">Rating</string>
+	<string name="title_release_date">Release Date</string>
+	<string name="ratingformat"> <xliff:g id="rating"> %1$.2f  </xliff:g> /10 </string>
+</resources>

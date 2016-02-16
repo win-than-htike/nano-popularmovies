@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+	<com.plan.yelinaung.popularmovies.customviews.AutofitRecyclerView
+			android:id="@+id/autofit_recycler"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:columnWidth="@dimen/movie_grid_item_width"
+			android:verticalSpacing="@dimen/movie_grid_spacing"
+			android:drawSelectorOnTop="true"
+			android:clipToPadding="false"
+			android:scrollbars="none"
+			android:focusable="false"
+			android:clickable="true"
+			android:orientation="vertical"
+			android:visibility="invisible"/>
+
+	<ProgressBar
+			android:id="@+id/progress"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			/>
+</FrameLayout>

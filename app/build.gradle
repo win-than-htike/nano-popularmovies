@@ -1,0 +1,62 @@
+apply plugin: 'com.android.application'
+
+def versionMajor = 1
+def versionMinor = 0
+def patch = 0
+
+android {
+
+  compileSdkVersion 23
+  buildToolsVersion "23.0.2"
+
+  defaultConfig {
+    applicationId "com.plan.yelinaung.popularmovies"
+    minSdkVersion 21
+    targetSdkVersion 23
+    versionCode versionMajor * 1000 + versionMinor * 100 + patch * 10
+    versionName "${versionMajor}.${versionMinor}.${patch}"
+  }
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+}
+ext {
+  SupportLibrary = '23.1.1'
+  Retrofit = '2.0.0-beta4'
+  RxAndroid = '1.1.0'
+  Rxlifecycle = '0.4.0'
+  Rx = [rxandroid         : "io.reactivex:rxandroid:${RxAndroid}",
+        rxjava            : "io.reactivex:rxandroid:${RxAndroid}",
+        rxlife            : "com.trello:rxlifecycle:${Rxlifecycle}"
+        , rxlifeComponents: "com.trello:rxlifecycle-components:${Rxlifecycle}"]
+
+  AndroidSupportLibraries = [design      : "com.android.support:design:${SupportLibrary}",
+                             recyclerView: "com.android.support:recyclerview-v7:${SupportLibrary}",
+                             appCompat   : "com.android.support:appcompat-v7:${SupportLibrary}",
+                             supportv4   : "com.android.support:support-v4:${SupportLibrary}",
+                             cardView    : "com.android.support:cardview-v7:${SupportLibrary}"]
+  Retrofit =
+      [retrofit: "com.squareup.retrofit2:retrofit:${Retrofit}",
+       retrofit_convertor: "com.squareup.retrofit2:converter-gson:${Retrofit}"]
+}
+
+dependencies {
+  compile fileTree(dir: 'libs', include: ['*.jar'])
+  testCompile 'junit:junit:4.12'
+  compile 'com.squareup.picasso:picasso:2.5.2'
+  compile 'com.jakewharton:butterknife:7.0.1'
+  compile Retrofit.retrofit
+  compile Retrofit.retrofit_convertor
+  compile Rx.rxandroid
+  compile Rx.rxjava
+  compile Rx.rxlife
+  compile Rx.rxlifeComponents
+  compile AndroidSupportLibraries.design
+  compile AndroidSupportLibraries.recyclerView
+  compile AndroidSupportLibraries.appCompat
+  compile AndroidSupportLibraries.supportv4
+  compile AndroidSupportLibraries.cardView
+}
