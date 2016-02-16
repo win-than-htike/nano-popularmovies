@@ -22,6 +22,7 @@ public class DetailActivity extends AppCompatActivity {
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_detail);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     ButterKnife.bind(this);
     MovieInfo movieInfo = getIntent().getParcelableExtra(Constants.PARCEL_DETAIL_NAME);
     Picasso.with(this).load(movieInfo.getImageUrl()).fit().into(imageView);

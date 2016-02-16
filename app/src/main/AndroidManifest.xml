@@ -18,8 +18,13 @@
 			</intent-filter>
 		</activity>
 		<activity android:name=".SettingsActivity">
+
+
 		</activity>
 		<activity android:name=".DetailActivity">
+			<meta-data
+					android:name="android.support.PARENT_ACTIVITY"
+					android:value="com.plan.yelinaung.popularmovies.MainActivity"/>
 		</activity>
 	</application>
 

@@ -10,6 +10,7 @@ public class SettingsActivity extends PreferenceActivity
     implements Preference.OnPreferenceChangeListener {
 
   @Override public boolean onPreferenceChange(Preference preference, Object o) {
+
     if (preference instanceof ListPreference) {
       ListPreference listPreference = (ListPreference) preference;
       int index = listPreference.findIndexOfValue(o.toString());
@@ -22,6 +23,7 @@ public class SettingsActivity extends PreferenceActivity
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
     addPreferencesFromResource(R.xml.preferences);
     Preference preference = findPreference(getResources().getString(R.string.key_sort_pref));
     preference.setOnPreferenceChangeListener(this);
