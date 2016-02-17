@@ -16,7 +16,7 @@ public class DetailActivity extends AppCompatActivity {
   @Bind(R.id.original_poster_title) TextView title;
   @Bind(R.id.release_text) TextView releaseDate;
   @Bind(R.id.rating_bar) AppCompatRatingBar ratingBar;
-  @Bind(R.id.rating) TextView ratingText;
+  @Bind(R.id.rating_text) TextView ratingText;
   @Bind(R.id.synopsis) TextView synopsis;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
