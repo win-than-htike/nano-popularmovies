@@ -40,7 +40,7 @@ MainActivity extends AppCompatActivity implements ClickEvent {
     Result result = popularMovieAdapter.getItem(position);
     Intent intent = new Intent(this, DetailActivity.class);
     MovieInfo movieInfo = new MovieInfo(result.getOriginalTitle(),
-        Constants.BASE_IMAGE_URL + result.getBackdropPath(), result.getOverview(),
+        Constants.BASE_IMAGE_URL + result.getPosterPath(), result.getOverview(),
         result.getPopularity(), result.getReleaseDate());
     intent.putExtra(Constants.PARCEL_DETAIL_NAME, movieInfo);
     startActivity(intent);
