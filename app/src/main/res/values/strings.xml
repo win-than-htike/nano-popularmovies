@@ -8,9 +8,17 @@
 	<string name="list_pref_popular_desc">popularity.desc</string>
 	<string name="popularity_popular_desc">Most Popular</string>
 	<string name="popularity_vote_desc">Most Voted</string>
+	<string name="favoruites">favor</string>
+	<string name="favoruites_title">Favourites</string>
 	<string name="list_pref_title">Change the Sort Order</string>
 	<string name="title_synopsis">Plot Synopsis</string>
 	<string name="title_rating">Rating</string>
+	<string name="title_review">Reviews</string>
+	<string name="trailer_review">Trailer and Reviews</string>
 	<string name="title_release_date">Release Date</string>
+	<string name="share">Share</string>
 	<string name="ratingformat"> <xliff:g id="rating"> %1$.2f  </xliff:g> /10 </string>
+
+	<!-- TODO: Remove or change this placeholder text -->
+	<string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -1,0 +1,4 @@
+
+#!/bin/bash
+
+open -a iTerm /Users/user/Desktop/WorkProjects/nano-degreeCourse/nan/logs

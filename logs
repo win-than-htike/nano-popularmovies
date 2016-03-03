@@ -1,0 +1,2 @@
+#!/bin/bash
+pidcat -d com.plan.yelinaung.popularmovies

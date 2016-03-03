@@ -12,7 +12,7 @@ public class Result {
   @SerializedName("overview") @Expose private String overview;
   @SerializedName("release_date") @Expose private String releaseDate;
   @SerializedName("genre_ids") @Expose private List<Integer> genreIds = new ArrayList<Integer>();
-  @SerializedName("id") @Expose private Integer id;
+  @SerializedName("id")  private Integer id;
   @SerializedName("original_title") @Expose private String originalTitle;
   @SerializedName("original_language") @Expose private String originalLanguage;
   @SerializedName("title") @Expose private String title;

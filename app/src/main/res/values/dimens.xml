@@ -13,4 +13,5 @@
 	<dimen name="poster_width">96dp</dimen>
 	<dimen name="detail_poster_width">150dp</dimen>
 	<dimen name="poster_height">200dp</dimen>
+	<dimen name="separtor_height">1dp</dimen>
 </resources>

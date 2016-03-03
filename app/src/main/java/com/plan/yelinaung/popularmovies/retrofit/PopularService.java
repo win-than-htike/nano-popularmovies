@@ -11,5 +11,5 @@ import retrofit2.http.Query;
 public interface PopularService {
 
   @GET("discover/movie") Call<PopularMovies> getPopularMovies(@Query("sort_by") String sortOrder,
-      @Query("api_key") String api_key);
+      @Query("api_key") String api_key, @Query("page") int page);
 }

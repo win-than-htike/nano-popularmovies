@@ -23,7 +23,6 @@ public class SettingsActivity extends PreferenceActivity
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
     addPreferencesFromResource(R.xml.preferences);
     Preference preference = findPreference(getResources().getString(R.string.key_sort_pref));
     preference.setOnPreferenceChangeListener(this);
