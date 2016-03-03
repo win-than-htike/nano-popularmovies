@@ -1,7 +1,9 @@
 package com.plan.yelinaung.popularmovies;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -11,6 +13,7 @@ import com.plan.yelinaung.popularmovies.fragments.DetailFragment;
 import com.plan.yelinaung.popularmovies.fragments.MainFragment;
 import com.plan.yelinaung.popularmovies.models.MovieInfo;
 import com.plan.yelinaung.popularmovies.utils.Constants;
+import com.plan.yelinaung.popularmovies.utils.InternetUtils;
 
 public class MainActivity extends AppCompatActivity implements MainFragment.OnClick {
   public String DETAIL_TAG = "detail";
@@ -68,6 +71,24 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnCl
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    if (!InternetUtils.isOnline(this)) {
+      AlertDialog.Builder abuilder = new AlertDialog.Builder(this);
+      abuilder.setTitle("No internet Connection");
+      abuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        @Override public void onClick(DialogInterface dialogInterface, int i) {
+          finish();
+        }
+      });
+      abuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        @Override public void onClick(DialogInterface dialogInterface, int i) {
+          Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+          startActivity(intent);
+        }
+      });
+      AlertDialog alertDialog = abuilder.create();
+      alertDialog.setMessage("No internet Connection! would u like to review favourites??");
+      alertDialog.show();
+    }
     if (findViewById(R.id.detail_frame) != null) {
       multiPane = true;
       if (savedInstanceState == null) {

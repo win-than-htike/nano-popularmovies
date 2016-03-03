@@ -50,7 +50,6 @@ import retrofit2.Retrofit;
  */
 public class DetailFragment extends Fragment {
   private MovieInfo movieInfo;
-  
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
