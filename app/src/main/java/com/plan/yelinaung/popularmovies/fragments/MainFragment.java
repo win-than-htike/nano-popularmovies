@@ -44,6 +44,7 @@ import retrofit2.Retrofit;
 public class MainFragment extends Fragment
     implements LoaderManager.LoaderCallbacks<Cursor>, ClickEvent {
   private LoaderManager.LoaderCallbacks<Cursor> mLoader;
+  private View view;
 
   public interface OnClick {
     void onClicked(MovieInfo movieInfo);
@@ -51,7 +52,7 @@ public class MainFragment extends Fragment
 
   @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.fragment_main, container, false);
+    view = inflater.inflate(R.layout.fragment_main, container, false);
     ButterKnife.bind(this, view);
     return view;
   }
@@ -67,7 +68,7 @@ public class MainFragment extends Fragment
     switch (i) {
       case LOADER_ID:
         if (favourites) {
-          return new CursorLoader(getContext(), MovieDatabaseContract.Movies.MOVIES_URI,
+          return new CursorLoader(view.getContext(), MovieDatabaseContract.Movies.MOVIES_URI,
               new String[] {
                   MovieDatabaseContract.Movies._ID, MovieDatabaseContract.Movies.MOVIE_ID,
                   MovieDatabaseContract.Movies.MOVIE_TITLE, MovieDatabaseContract.Movies.MOVIE_PLOT,
@@ -80,7 +81,7 @@ public class MainFragment extends Fragment
           if (prefUtils.getSortOrder()
               .equalsIgnoreCase(getResources().getString(R.string.list_pref_popular_desc))) {
 
-            return new CursorLoader(getContext(), MovieDatabaseContract.Movies.MOVIES_URI,
+            return new CursorLoader(view.getContext(), MovieDatabaseContract.Movies.MOVIES_URI,
                 new String[] {
                     MovieDatabaseContract.Movies._ID, MovieDatabaseContract.Movies.MOVIE_ID,
                     MovieDatabaseContract.Movies.MOVIE_TITLE,
@@ -93,7 +94,7 @@ public class MainFragment extends Fragment
           } else if (prefUtils.getSortOrder()
               .equalsIgnoreCase(getResources().getString(R.string.list_pref_vote_desc))) {
 
-            return new CursorLoader(getContext(), MovieDatabaseContract.Movies.MOVIES_URI,
+            return new CursorLoader(view.getContext(), MovieDatabaseContract.Movies.MOVIES_URI,
                 new String[] {
                     MovieDatabaseContract.Movies._ID, MovieDatabaseContract.Movies.MOVIE_ID,
                     MovieDatabaseContract.Movies.MOVIE_TITLE,
@@ -104,7 +105,7 @@ public class MainFragment extends Fragment
                     MovieDatabaseContract.Movies.VOTE_COUNT, MovieDatabaseContract.Movies.BOOKMARK
                 }, null, null, MovieDatabaseContract.Movies.VOTE_COUNT + " DESC ");
           } else {
-            return new CursorLoader(getContext(), MovieDatabaseContract.Movies.MOVIES_URI,
+            return new CursorLoader(view.getContext(), MovieDatabaseContract.Movies.MOVIES_URI,
                 new String[] {
                     MovieDatabaseContract.Movies._ID, MovieDatabaseContract.Movies.MOVIE_ID,
                     MovieDatabaseContract.Movies.MOVIE_TITLE,
@@ -219,7 +220,8 @@ public class MainFragment extends Fragment
                 result.getPosterPath());
             contentValues.put(MovieDatabaseContract.Movies.MOVIE_RELEASE_DATE,
                 result.getReleaseDate());
-            if (getContext().getContentResolver()
+            if (view.getContext()
+                .getContentResolver()
                 .update(MovieDatabaseContract.Movies.MOVIES_URI, contentValues,
                     MovieDatabaseContract.Movies.MOVIE_ID + " = " + result.getId(), null) <= 0) {
               contentValues.put(MovieDatabaseContract.Movies.BOOKMARK, 0);
