@@ -260,7 +260,6 @@ public class DetailFragment extends Fragment {
       });
       loadYoutubeInformations();
     }
-
   }
 }
 

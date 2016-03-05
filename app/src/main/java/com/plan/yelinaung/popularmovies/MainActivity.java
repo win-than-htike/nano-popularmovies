@@ -55,13 +55,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnCl
     return super.onOptionsItemSelected(item);
   }
 
-  @Override protected void onResume() {
-    super.onResume();
-
-  }
-
   @Override protected void onPause() {
-    if (findViewById(R.id.detail_frame) != null) {
+    if (getSupportFragmentManager().findFragmentByTag(DETAIL_TAG) != null) {
       getSupportFragmentManager().beginTransaction().remove(fragment).commit();
     }
     super.onPause();
@@ -75,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnCl
 
     this.movieInfo = movieInfo;
     isClicked = true;
-
     if (multiPane) {
       Bundle args = new Bundle();
       args.putParcelable(Constants.PARCEL_DETAIL_NAME, movieInfo);
