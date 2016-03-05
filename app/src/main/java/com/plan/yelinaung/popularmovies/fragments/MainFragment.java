@@ -209,7 +209,7 @@ public class MainFragment extends Fragment
 
   @Override public void onSaveInstanceState(Bundle outState) {
     outState.putInt(Constants.ISSAVED_DATAS, clicked_position);
-    super.onSaveInstanceState(outState);
+
   }
 
   @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {

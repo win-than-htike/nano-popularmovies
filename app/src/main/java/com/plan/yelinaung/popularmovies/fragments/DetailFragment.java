@@ -56,7 +56,7 @@ public class DetailFragment extends Fragment {
       @Nullable Bundle savedInstanceState) {
     view = inflater.inflate(R.layout.fragment_detail, container, false);
     ButterKnife.bind(this, view);
-    setRetainInstance(true);
+
     return view;
   }
 
@@ -190,7 +190,6 @@ public class DetailFragment extends Fragment {
     Bundle args = getArguments();
     if (args != null) {
       movieInfo = args.getParcelable(Constants.PARCEL_DETAIL_NAME);
-
       Picasso.with(view.getContext()).load(movieInfo.getImageUrl()).fit().into(imageView);
       id = movieInfo.getId();
       recyclerView.setVisibility(View.GONE);
