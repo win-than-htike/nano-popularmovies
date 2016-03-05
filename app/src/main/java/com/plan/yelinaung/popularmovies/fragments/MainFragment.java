@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +31,7 @@ import com.plan.yelinaung.popularmovies.models.Result;
 import com.plan.yelinaung.popularmovies.retrofit.PopularService;
 import com.plan.yelinaung.popularmovies.retrofit.RetrofitInstance;
 import com.plan.yelinaung.popularmovies.utils.Constants;
+import com.plan.yelinaung.popularmovies.utils.InternetUtils;
 import com.plan.yelinaung.popularmovies.utils.PrefUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,6 +45,7 @@ public class MainFragment extends Fragment
     implements LoaderManager.LoaderCallbacks<Cursor>, ClickEvent {
   private LoaderManager.LoaderCallbacks<Cursor> mLoader;
   private View view;
+  int clicked_position;
 
   public interface OnClick {
     void onClicked(MovieInfo movieInfo);
@@ -65,9 +66,12 @@ public class MainFragment extends Fragment
   private boolean favourites;
 
   @Override public Loader onCreateLoader(int i, Bundle bundle) {
+
     switch (i) {
+
       case LOADER_ID:
         if (favourites) {
+          prefUtils = new PrefUtils(view.getContext());
           return new CursorLoader(view.getContext(), MovieDatabaseContract.Movies.MOVIES_URI,
               new String[] {
                   MovieDatabaseContract.Movies._ID, MovieDatabaseContract.Movies.MOVIE_ID,
@@ -78,6 +82,7 @@ public class MainFragment extends Fragment
                   MovieDatabaseContract.Movies.VOTE_COUNT, MovieDatabaseContract.Movies.BOOKMARK
               }, MovieDatabaseContract.Movies.BOOKMARK + " == 1 ", null, null);
         } else {
+          prefUtils = new PrefUtils(view.getContext());
           if (prefUtils.getSortOrder()
               .equalsIgnoreCase(getResources().getString(R.string.list_pref_popular_desc))) {
 
@@ -135,8 +140,9 @@ public class MainFragment extends Fragment
   private PopularMovieAdapter popularMovieAdapter;
 
   @Override public void onClick(int position, View view) {
+    clicked_position = position;
     Cursor cursor = adapter.getItem(position);
-    //Intent intent = new Intent(getContext(), DetailActivity.class);
+
     MovieInfo movieInfo = new MovieInfo(
         cursor.getInt(cursor.getColumnIndexOrThrow(MovieDatabaseContract.Movies.MOVIE_ID)),
         cursor.getString(cursor.getColumnIndexOrThrow(MovieDatabaseContract.Movies.MOVIE_TITLE)),
@@ -148,18 +154,12 @@ public class MainFragment extends Fragment
         cursor.getString(
             cursor.getColumnIndexOrThrow(MovieDatabaseContract.Movies.MOVIE_RELEASE_DATE)));
     ((OnClick) (getActivity())).onClicked(movieInfo);
-    //intent.putExtra(Constants.PARCEL_DETAIL_NAME, movieInfo);
-    //startActivity(intent);
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.settings:
         Intent intent = new Intent(getContext(), SettingsActivity.class);
-        int rows = getContext().getContentResolver()
-            .delete(MovieDatabaseContract.Movies.MOVIES_URI,
-                MovieDatabaseContract.Movies.BOOKMARK + " = 0 ", null);
-        Log.d("Rows Deleted", rows + "  ss");
         startActivity(intent);
         break;
     }
@@ -180,35 +180,55 @@ public class MainFragment extends Fragment
     Retrofit retrofit = RetrofitInstance.getInstance();
     popularService = retrofit.create(PopularService.class);
 
-    adapter = new MoviesCursorAdapter(getContext(), null);
+    adapter = new MoviesCursorAdapter(view.getContext(), null);
     autofitRecyclerView.setAdapter(adapter);
-    Log.d("Here", prefUtils.getSortOrder());
-    if (prefUtils.getSortOrder() == getResources().getString(R.string.favoruites)) {
-      favourites = true;
-      progressBar.setVisibility(View.GONE);
-      autofitRecyclerView.setVisibility(View.VISIBLE);
+    if (InternetUtils.isOnline(view.getContext())) {
+      if (prefUtils.getSortOrder() == getResources().getString(R.string.favoruites)) {
+        favourites = true;
+        progressBar.setVisibility(View.GONE);
+        autofitRecyclerView.setVisibility(View.VISIBLE);
+        getLoaderManager().restartLoader(LOADER_ID, null, MainFragment.this);
+        getLoaderManager().initLoader(LOADER_ID, null, MainFragment.this);
+      } else {
+        favourites = false;
+        loadData(prefUtils.getSortOrder(), 1);
+        recyclerViewScroll = new RecyclerViewScroll() {
+          @Override public void onLoadMore(int current_page) {
+            loadData(prefUtils.getSortOrder(), current_page);
+          }
+        };
+        autofitRecyclerView.addOnScrollListener(recyclerViewScroll);
+      }
+    } else {
       getLoaderManager().restartLoader(LOADER_ID, null, MainFragment.this);
       getLoaderManager().initLoader(LOADER_ID, null, MainFragment.this);
-    } else {
-      favourites = false;
-      loadData(prefUtils.getSortOrder(), 1);
-      recyclerViewScroll = new RecyclerViewScroll() {
-        @Override public void onLoadMore(int current_page) {
-          loadData(prefUtils.getSortOrder(), current_page);
-        }
-      };
-      autofitRecyclerView.addOnScrollListener(recyclerViewScroll);
+      progressBar.setVisibility(View.GONE);
+      autofitRecyclerView.setVisibility(View.VISIBLE);
+    }
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    outState.putInt(Constants.ISSAVED_DATAS, clicked_position);
+    super.onSaveInstanceState(outState);
+  }
+
+  @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+    super.onViewStateRestored(savedInstanceState);
+    if (savedInstanceState != null) {
+      getLoaderManager().restartLoader(LOADER_ID, null, MainFragment.this);
+      getLoaderManager().initLoader(LOADER_ID, null, MainFragment.this);
     }
   }
 
   private void loadData(String value, int page) {
-    Toast.makeText(getContext(), "Loading more", Toast.LENGTH_SHORT).show();
+    Toast.makeText(view.getContext(), "Loading more", Toast.LENGTH_SHORT).show();
     Call<PopularMovies> popularMoviesCall =
         popularService.getPopularMovies(value, Constants.MOVIE_DB_API, page);
     popularMoviesCall.enqueue(new Callback<PopularMovies>() {
       @Override public void onResponse(Call<PopularMovies> call, Response<PopularMovies> response) {
         if (response.body().getResults().size() > 0) {
           for (Result result : response.body().getResults()) {
+
             ContentValues contentValues = new ContentValues();
             contentValues.put(MovieDatabaseContract.Movies.MOVIE_ID, result.getId());
             contentValues.put(MovieDatabaseContract.Movies.MOVIE_TITLE, result.getTitle());
@@ -225,7 +245,8 @@ public class MainFragment extends Fragment
                 .update(MovieDatabaseContract.Movies.MOVIES_URI, contentValues,
                     MovieDatabaseContract.Movies.MOVIE_ID + " = " + result.getId(), null) <= 0) {
               contentValues.put(MovieDatabaseContract.Movies.BOOKMARK, 0);
-              getContext().getContentResolver()
+              view.getContext()
+                  .getContentResolver()
                   .insert(MovieDatabaseContract.Movies.MOVIES_URI, contentValues);
             }
           }

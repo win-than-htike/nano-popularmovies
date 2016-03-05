@@ -26,11 +26,13 @@ public class MoviesCursorAdapter extends CursorRecyclerViewAdapter<MoviesCursorA
   private Context context;
   private Cursor cursor;
   private ClickEvent clickEvent;
+  private Cursor listCursor;
 
   public MoviesCursorAdapter(Context context, Cursor cursor) {
     super(context, cursor);
     this.context = context;
     this.cursor = cursor;
+    listCursor = cursor;
     notifyDataSetChanged();
   }
 

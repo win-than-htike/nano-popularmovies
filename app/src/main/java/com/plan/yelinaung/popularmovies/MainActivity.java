@@ -18,12 +18,28 @@ import com.plan.yelinaung.popularmovies.utils.InternetUtils;
 public class MainActivity extends AppCompatActivity implements MainFragment.OnClick {
   public String DETAIL_TAG = "detail";
   private DetailFragment fragment;
+  private MovieInfo movieInfo = null;
+  private boolean isClicked = false;
 
   private boolean multiPane;
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.main_menu, menu);
     return true;
+  }
+
+  @Override protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    super.onRestoreInstanceState(savedInstanceState);
+    if (savedInstanceState != null) {
+      movieInfo = savedInstanceState.getParcelable(Constants.SAVED_MOVIE);
+      onClicked(movieInfo);
+    }
+  }
+
+  @Override protected void onSaveInstanceState(Bundle outState) {
+    if (movieInfo != null && isClicked) {
+      outState.putParcelable(Constants.SAVED_MOVIE, movieInfo);
+    }
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -41,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnCl
 
   @Override protected void onResume() {
     super.onResume();
+
   }
 
   @Override protected void onPause() {
@@ -50,14 +67,20 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnCl
     super.onPause();
   }
 
+  public MovieInfo getMovieInfo() {
+    return movieInfo;
+  }
+
   @Override public void onClicked(MovieInfo movieInfo) {
+
+    this.movieInfo = movieInfo;
+    isClicked = true;
+
     if (multiPane) {
       Bundle args = new Bundle();
       args.putParcelable(Constants.PARCEL_DETAIL_NAME, movieInfo);
-
       fragment = new DetailFragment();
       fragment.setArguments(args);
-
       getSupportFragmentManager().beginTransaction()
           .replace(R.id.detail_frame, fragment, DETAIL_TAG)
           .commit();
@@ -71,12 +94,13 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnCl
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
     if (!InternetUtils.isOnline(this)) {
       AlertDialog.Builder abuilder = new AlertDialog.Builder(this);
       abuilder.setTitle("No internet Connection");
       abuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
         @Override public void onClick(DialogInterface dialogInterface, int i) {
-          finish();
+
         }
       });
       abuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -92,9 +116,12 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnCl
     if (findViewById(R.id.detail_frame) != null) {
       multiPane = true;
       if (savedInstanceState == null) {
-        //getSupportFragmentManager().beginTransaction()
-        //    .replace(R.id.detail_frame, new DetailFragment(), DETAIL_TAG)
-        //    .commit();
+        if (getSupportFragmentManager().findFragmentByTag(DETAIL_TAG) == null) {
+
+        }
+        getSupportFragmentManager().beginTransaction()
+            .replace(R.id.detail_frame, new DetailFragment(), DETAIL_TAG)
+            .commit();
       }
     } else {
       multiPane = false;
