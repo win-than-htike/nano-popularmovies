@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnCl
 
   @Override protected void onSaveInstanceState(Bundle outState) {
     if (movieInfo != null && isClicked) {
+
       outState.putParcelable(Constants.SAVED_MOVIE, movieInfo);
     }
   }
@@ -114,11 +115,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnCl
     if (findViewById(R.id.detail_frame) != null) {
       multiPane = true;
       if (savedInstanceState == null) {
-        //if (getSupportFragmentManager().findFragmentByTag(DETAIL_TAG) == null) {
-        //  getSupportFragmentManager().beginTransaction()
-        //      .replace(R.id.detail_frame, new DetailFragment(), DETAIL_TAG)
-        //      .commit();
-        //}
+        if (getSupportFragmentManager().findFragmentByTag(DETAIL_TAG) == null) {
+          getSupportFragmentManager().beginTransaction()
+              .replace(R.id.detail_frame, new DetailFragment(), DETAIL_TAG)
+              .commit();
+        }
       }
     } else {
       multiPane = false;

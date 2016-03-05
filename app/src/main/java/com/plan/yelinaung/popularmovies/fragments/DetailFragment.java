@@ -190,74 +190,77 @@ public class DetailFragment extends Fragment {
     Bundle args = getArguments();
     if (args != null) {
       movieInfo = args.getParcelable(Constants.PARCEL_DETAIL_NAME);
-      Picasso.with(view.getContext()).load(movieInfo.getImageUrl()).fit().into(imageView);
-      id = movieInfo.getId();
-      recyclerView.setVisibility(View.GONE);
-      title.setText(movieInfo.getTitle());
-      releaseDate.setText(movieInfo.getReleaseDate());
-      float rating = (float) (movieInfo.getRating() / 10);
-      ratingBar.setRating(rating);
-      ratingText.setText(getString(R.string.ratingformat, rating));
-      synopsis.setText(movieInfo.getSynopsis());
-      like.setColorFilter(Color.GRAY);
-      share.setVisibility(View.INVISIBLE);
-      Cursor cursor = view.getContext()
-          .getContentResolver()
-          .query(MovieDatabaseContract.Movies.MOVIES_URI,
-              new String[] { MovieDatabaseContract.Movies.BOOKMARK },
-              MovieDatabaseContract.Movies.MOVIE_ID + " = " + id, null, null);
-      cursor.moveToPosition(0);
-      switch (cursor.getInt(cursor.getColumnIndexOrThrow(MovieDatabaseContract.Movies.BOOKMARK))) {
-        case 0:
-          like.setColorFilter(Color.GRAY);
-          break;
-        case 1:
-          like.setColorFilter(Color.RED);
-          break;
+      if (movieInfo != null) {
+        Picasso.with(view.getContext()).load(movieInfo.getImageUrl()).fit().into(imageView);
+        id = movieInfo.getId();
+        recyclerView.setVisibility(View.GONE);
+        title.setText(movieInfo.getTitle());
+        releaseDate.setText(movieInfo.getReleaseDate());
+        float rating = (float) (movieInfo.getRating() / 10);
+        ratingBar.setRating(rating);
+        ratingText.setText(getString(R.string.ratingformat, rating));
+        synopsis.setText(movieInfo.getSynopsis());
+        like.setColorFilter(Color.GRAY);
+        share.setVisibility(View.INVISIBLE);
+        Cursor cursor = view.getContext()
+            .getContentResolver()
+            .query(MovieDatabaseContract.Movies.MOVIES_URI,
+                new String[] { MovieDatabaseContract.Movies.BOOKMARK },
+                MovieDatabaseContract.Movies.MOVIE_ID + " = " + id, null, null);
+        cursor.moveToPosition(0);
+        switch (cursor.getInt(
+            cursor.getColumnIndexOrThrow(MovieDatabaseContract.Movies.BOOKMARK))) {
+          case 0:
+            like.setColorFilter(Color.GRAY);
+            break;
+          case 1:
+            like.setColorFilter(Color.RED);
+            break;
 
-        default:
-          like.setColorFilter(Color.GRAY);
-          break;
-      }
-      cursor.close();
-      like.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View view) {
-          Cursor cursor = view.getContext()
-              .getContentResolver()
-              .query(MovieDatabaseContract.Movies.MOVIES_URI,
-                  new String[] { MovieDatabaseContract.Movies.BOOKMARK },
-                  MovieDatabaseContract.Movies.MOVIE_ID + " = " + id, null, null);
-          cursor.moveToPosition(0);
-          ContentValues contentValues = new ContentValues();
-          switch (cursor.getInt(
-              cursor.getColumnIndexOrThrow(MovieDatabaseContract.Movies.BOOKMARK))) {
-            case 0:
-              contentValues.put(MovieDatabaseContract.Movies.BOOKMARK, 1);
-
-              int d = view.getContext()
-                  .getContentResolver()
-                  .update(MovieDatabaseContract.Movies.MOVIES_URI, contentValues,
-                      MovieDatabaseContract.Movies.MOVIE_ID + " = " + id, null);
-              like.setColorFilter(Color.RED);
-              break;
-            case 1:
-              contentValues = new ContentValues();
-              contentValues.put(MovieDatabaseContract.Movies.BOOKMARK, 0);
-              like.setColorFilter(Color.GRAY);
-              view.getContext()
-                  .getContentResolver()
-                  .update(MovieDatabaseContract.Movies.MOVIES_URI, contentValues,
-                      MovieDatabaseContract.Movies.MOVIE_ID + " = " + id, null);
-              break;
-
-            default:
-              like.setColorFilter(Color.GRAY);
-              break;
-          }
-          cursor.close();
+          default:
+            like.setColorFilter(Color.GRAY);
+            break;
         }
-      });
-      loadYoutubeInformations();
+        cursor.close();
+        like.setOnClickListener(new View.OnClickListener() {
+          @Override public void onClick(View view) {
+            Cursor cursor = view.getContext()
+                .getContentResolver()
+                .query(MovieDatabaseContract.Movies.MOVIES_URI,
+                    new String[] { MovieDatabaseContract.Movies.BOOKMARK },
+                    MovieDatabaseContract.Movies.MOVIE_ID + " = " + id, null, null);
+            cursor.moveToPosition(0);
+            ContentValues contentValues = new ContentValues();
+            switch (cursor.getInt(
+                cursor.getColumnIndexOrThrow(MovieDatabaseContract.Movies.BOOKMARK))) {
+              case 0:
+                contentValues.put(MovieDatabaseContract.Movies.BOOKMARK, 1);
+
+                int d = view.getContext()
+                    .getContentResolver()
+                    .update(MovieDatabaseContract.Movies.MOVIES_URI, contentValues,
+                        MovieDatabaseContract.Movies.MOVIE_ID + " = " + id, null);
+                like.setColorFilter(Color.RED);
+                break;
+              case 1:
+                contentValues = new ContentValues();
+                contentValues.put(MovieDatabaseContract.Movies.BOOKMARK, 0);
+                like.setColorFilter(Color.GRAY);
+                view.getContext()
+                    .getContentResolver()
+                    .update(MovieDatabaseContract.Movies.MOVIES_URI, contentValues,
+                        MovieDatabaseContract.Movies.MOVIE_ID + " = " + id, null);
+                break;
+
+              default:
+                like.setColorFilter(Color.GRAY);
+                break;
+            }
+            cursor.close();
+          }
+        });
+        loadYoutubeInformations();
+      }
     }
   }
 }
