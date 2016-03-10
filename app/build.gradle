@@ -4,7 +4,7 @@ apply plugin: 'com.android.application'
 def versionMajor = 1
 def versionMinor = 0
 def patch = 0
-def STRING = "String";
+
 android {
 
   compileSdkVersion 23
@@ -17,7 +17,7 @@ android {
     targetSdkVersion 23
     versionCode versionMajor * 1000 + versionMinor * 100 + patch * 10
     versionName "${versionMajor}.${versionMinor}.${patch}"
-    buildConfigField STRING, "API_KEY", "\"${STRING}\""
+
   }
   buildTypes {
     release {
