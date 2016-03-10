@@ -14,16 +14,17 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.plan.yelinaung.popularmovies.R;
 import com.plan.yelinaung.popularmovies.YoutubeActivity;
@@ -56,6 +57,7 @@ public class DetailFragment extends Fragment {
       @Nullable Bundle savedInstanceState) {
     view = inflater.inflate(R.layout.fragment_detail, container, false);
     ButterKnife.bind(this, view);
+    setHasOptionsMenu(true);
 
     return view;
   }
@@ -70,16 +72,16 @@ public class DetailFragment extends Fragment {
   @Bind(R.id.review_container) RecyclerView recyclerView;
   @Bind(R.id.like) ImageView like;
   @Bind(R.id.rating_card) CardView ratingCard;
-  @Bind(R.id.share) Button share;
+  //@Bind(R.id.share) Button share;
 
-  @OnClick(R.id.share) void OnShare(View view) {
-    Intent sendIntent = new Intent();
-    sendIntent.setAction(Intent.ACTION_SEND);
-    sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey check this out! Its cool!");
-    sendIntent.putExtra(Intent.EXTRA_TEXT, "https://www.youtube.com/watch?v=" + key);
-    sendIntent.setType("text/plain");
-    startActivity(sendIntent);
-  }
+  //@OnClick(R.id.share) void OnShare(View view) {
+  //  Intent sendIntent = new Intent();
+  //  sendIntent.setAction(Intent.ACTION_SEND);
+  //  sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey check this out! Its cool!");
+  //  sendIntent.putExtra(Intent.EXTRA_TEXT, "https://www.youtube.com/watch?v=" + key);
+  //  sendIntent.setType("text/plain");
+  //  startActivity(sendIntent);
+  //}
 
   private AlertDialog alertDialog;
   private int id;
@@ -123,7 +125,7 @@ public class DetailFragment extends Fragment {
                                    trailerContainer.setVisibility(View.VISIBLE);
                                    List<YoutubeModel.YoutubeResult> results = response.body().getResults();
                                    key = response.body().getResults().get(0).getKey();
-                                   share.setVisibility(View.VISIBLE);
+                                   //share.setVisibility(View.VISIBLE);
                                    for (final YoutubeModel.YoutubeResult youtubeResult : results) {
                                      // new Handler().post(new Runnable() {
                                      // @Override public void run() {
@@ -201,7 +203,7 @@ public class DetailFragment extends Fragment {
         ratingText.setText(getString(R.string.ratingformat, rating));
         synopsis.setText(movieInfo.getSynopsis());
         like.setColorFilter(Color.GRAY);
-        share.setVisibility(View.INVISIBLE);
+        //  share.setVisibility(View.INVISIBLE);
         Cursor cursor = view.getContext()
             .getContentResolver()
             .query(MovieDatabaseContract.Movies.MOVIES_URI,
@@ -262,6 +264,36 @@ public class DetailFragment extends Fragment {
         loadYoutubeInformations();
       }
     }
+  }
+
+  private Intent createShareIntent() {
+    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+    shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+    shareIntent.setType("text/plain");
+    if (movieInfo != null) {
+      if (movieInfo.getTitle() != null) {
+        shareIntent.putExtra(Intent.EXTRA_TEXT,
+            " \"Hey check this out! Its cool! " + movieInfo.getTitle() + "\"");
+        if (key != null) {
+          shareIntent.putExtra(Intent.EXTRA_TEXT, "https://www.youtube.com/watch?v=" + key);
+        }
+      }
+    }
+    return shareIntent;
+  }
+
+  private void finishCreatingMenu(Menu menu) {
+    // Retrieve the share menu item
+    MenuItem menuItem = menu.findItem(R.id.action_share);
+    menuItem.setIntent(createShareIntent());
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    // if (getActivity() instanceof DetailActivity) {
+    // Inflate the menu; this adds items to the action bar if it is present.
+    inflater.inflate(R.menu.menu_detail, menu);
+    finishCreatingMenu(menu);
+    //  }
   }
 }
 

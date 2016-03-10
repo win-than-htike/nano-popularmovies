@@ -5,10 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import com.plan.yelinaung.popularmovies.database.MovieDatabaseContract;
 import com.plan.yelinaung.popularmovies.fragments.DetailFragment;
 import com.plan.yelinaung.popularmovies.fragments.MainFragment;
 import com.plan.yelinaung.popularmovies.models.MovieInfo;
@@ -23,10 +19,13 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnCl
 
   private boolean multiPane;
 
-  @Override public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.main_menu, menu);
-    return true;
-  }
+  //@Override public boolean onCreateOptionsMenu(Menu menu) {
+  //  getMenuInflater().inflate(R.menu.main_menu, menu);
+  //  return true;
+  //} //@Override public boolean onCreateOptionsMenu(Menu menu) {
+  //  getMenuInflater().inflate(R.menu.main_menu, menu);
+  //  return true;
+  //}
 
   @Override protected void onRestoreInstanceState(Bundle savedInstanceState) {
     super.onRestoreInstanceState(savedInstanceState);
@@ -45,18 +44,15 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnCl
     }
   }
 
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.settings:
-        Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-        int rows = getContentResolver().delete(MovieDatabaseContract.Movies.MOVIES_URI,
-            MovieDatabaseContract.Movies.BOOKMARK + " = 0 ", null);
-        Log.d("Rows Deleted", rows + "  ss");
-        startActivity(intent);
-        break;
-    }
-    return super.onOptionsItemSelected(item);
-  }
+  //@Override public boolean onOptionsItemSelected(MenuItem item) {
+  //  switch (item.getItemId()) {
+  //    case R.id.settings:
+  //      Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+  //      startActivity(intent);
+  //      break;
+  //  }
+  //  return super.onOptionsItemSelected(item);
+  //}
 
   @Override protected void onPause() {
     if (fragment != null) {

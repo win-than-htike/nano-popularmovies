@@ -65,8 +65,7 @@ public class MoviesCursorAdapter extends CursorRecyclerViewAdapter<MoviesCursorA
     Picasso.with(context)
         .load(Constants.BASE_IMAGE_URL + cursor.getString(
             cursor.getColumnIndexOrThrow(MovieDatabaseContract.Movies.MOVIE_POSTER_URL)))
-        .placeholder(
-            context.getResources().getDrawable(R.drawable.background_overlay, context.getTheme()))
+        .placeholder(context.getResources().getDrawable(R.drawable.background_overlay))
         .into(target);
     holder.textView.setText(
         cursor.getString(cursor.getColumnIndexOrThrow(MovieDatabaseContract.Movies.MOVIE_TITLE)));

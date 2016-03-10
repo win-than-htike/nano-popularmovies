@@ -10,6 +10,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +57,12 @@ public class MainFragment extends Fragment
       Bundle savedInstanceState) {
     view = inflater.inflate(R.layout.fragment_main, container, false);
     ButterKnife.bind(this, view);
+    setHasOptionsMenu(true);
     return view;
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.menu_main_fragment, menu);
   }
 
   public static final int LOADER_ID = 0x01;
@@ -200,8 +207,10 @@ public class MainFragment extends Fragment
         autofitRecyclerView.addOnScrollListener(recyclerViewScroll);
       }
     } else {
-      getLoaderManager().restartLoader(LOADER_ID, null, MainFragment.this);
-      getLoaderManager().initLoader(LOADER_ID, null, MainFragment.this);
+      if (!this.isDetached()) {
+        getLoaderManager().restartLoader(LOADER_ID, null, MainFragment.this);
+        getLoaderManager().initLoader(LOADER_ID, null, MainFragment.this);
+      }
       progressBar.setVisibility(View.GONE);
       autofitRecyclerView.setVisibility(View.VISIBLE);
     }
@@ -209,7 +218,6 @@ public class MainFragment extends Fragment
 
   @Override public void onSaveInstanceState(Bundle outState) {
     outState.putInt(Constants.ISSAVED_DATAS, clicked_position);
-
   }
 
   @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
@@ -252,7 +260,6 @@ public class MainFragment extends Fragment
           }
           progressBar.setVisibility(View.GONE);
           autofitRecyclerView.setVisibility(View.VISIBLE);
-
           getLoaderManager().restartLoader(LOADER_ID, null, MainFragment.this);
           getLoaderManager().initLoader(LOADER_ID, null, MainFragment.this);
         } else {

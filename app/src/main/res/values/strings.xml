@@ -14,6 +14,7 @@
 	<string name="title_synopsis">Plot Synopsis</string>
 	<string name="title_rating">Rating</string>
 	<string name="title_review">Reviews</string>
+	<string name="action_share">share</string>
 	<string name="trailer_review">Trailer and Reviews</string>
 	<string name="title_release_date">Release Date</string>
 	<string name="share">Share</string>
